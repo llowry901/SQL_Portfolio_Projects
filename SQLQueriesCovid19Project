@@ -9,6 +9,40 @@ FROM `portfolioproject-360018.Covid.CovidDeaths`
 Where continent is not null
 Order by 1, 2
 
+--1. Query for Tableau Project
+--Global Numbers
+--Today's Total Cases, Deaths, and Death Percentage Across the World
+SELECT SUM(new_cases) as total_cases, SUM(cast(new_deaths as int)) as total_deaths, SUM(cast(new_deaths as int)) / SUM(new_cases)*100 as death_percentage_global
+FROM `portfolioproject-360018.Covid.CovidDeaths` 
+Where continent is not null
+Order by 1, 2
+
+-- 2. Query for Tableau Project
+-- Take these out as they are not inluded in the above queries and want to stay consistent
+-- European Union is part of Europe
+-- Income counted twice, put under location column
+Select location, SUM(cast(new_deaths as int)) as total_deaths
+FROM `portfolioproject-360018.Covid.CovidDeaths` 
+Where continent is null 
+and location not in ('World', 'European Union', 'International', 'Lower middle income', 'Low income', 'High income', 'Upper middle income')
+Group by location
+Order by total_deaths desc
+
+-- 3. Query for Tableau Project
+--Looking at Countries with Highest Infection Rate Compared to Population 
+Select location, population, Max(total_cases) as highest_infection_count, Max((total_cases/population))*100 as percent_population_infected
+FROM `portfolioproject-360018.Covid.CovidDeaths` 
+Where location not in ('World', 'European Union', 'International', 'Lower middle income', 'Low income', 'High income', 'Upper middle income')
+Group by location, population
+Order by percent_population_infected desc
+
+-- 4. Query for Tableau Project
+Select Location, Population, date, MAX(total_cases) as highest_infection_count,  Max((total_cases/population))*100 as percent_population_infected
+FROM `portfolioproject-360018.Covid.CovidDeaths` 
+Where location not in ('World', 'European Union', 'International', 'Lower middle income', 'Low income', 'High income', 'Upper middle income')
+Group by Location, Population, date
+order by percent_population_infected desc
+
 -- Looking at Total Cases vs Total Deaths 
 -- Calculate Percentage of People Dying Who Report Being Infected
 --Shows likelihood of dying if you contract Covid in your country
@@ -30,12 +64,6 @@ FROM `portfolioproject-360018.Covid.CovidDeaths`
 Where continent is not null
 Order by date desc 
 
---Looking at Countries with Highest Infection Rate Compared to Population 
-Select location, population, Max(total_cases) as highest_infection_count, Max(total_cases/population)*100 as percent_population_infected
-FROM `portfolioproject-360018.Covid.CovidDeaths` 
-Where continent is not null
-Group by location, population
-Order by percent_population_infected desc
 
 --Showing Countries with Highest Death Count Per Population
 --Convert total_deaths data type from char to integer using CAST funtion
@@ -60,12 +88,6 @@ SELECT SUM(new_cases) as total_cases, SUM(cast(new_deaths as int)) as total_deat
 FROM `portfolioproject-360018.Covid.CovidDeaths` 
 Where continent is not null
 Group by date
-Order by 1, 2
-
--Today's Total Cases, Deaths, and Death Percentage Across the World
-SELECT SUM(new_cases) as total_cases, SUM(cast(new_deaths as int)) as total_deaths, SUM(cast(new_deaths as int)) / SUM(new_cases)*100 as death_percentage_global
-FROM `portfolioproject-360018.Covid.CovidDeaths` 
-Where continent is not null
 Order by 1, 2
 
 -- Join CovidDeaths and Covid Vaccinations Tables
