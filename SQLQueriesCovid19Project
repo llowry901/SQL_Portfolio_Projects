@@ -1,6 +1,6 @@
 /*
 Covid 19 Data Exploration 
-Skills used: Joins, CTE's, Temp Tables, Aggregate Functions, Filter & Sort, Creating Temporary Tables, Creating Views, Converting Data Types
+Skills used: Joins, CTE's, Temp Tables, Aggregate Functions, Creating Temporary Tables, Creating Views, Converting Data Types
 */
 
 --Previewing CovidDeaths data
@@ -46,6 +46,53 @@ FROM `portfolioproject-360018.Covid.CovidDeaths`
 WHERE Location in ('United States', 'United Kingdom', 'China', 'Russia', 'Canada', 'Mexico', 'India')
 GROUP BY Location, Population, date
 ORDER BY percent_population_infected desc;
+
+-- 5. Query for Tableau Project
+-- Percent Population Vaccinated 
+--Total Vaccinations by Country
+--Looking at Countries with Highest Vaccination Rate Compared to Population 
+Select location, population, Max(total_cases) as highest_infection_count, Max((total_cases/population))*100 as percent_population_infected
+FROM `portfolioproject-360018.Covid.CovidVaccinations` 
+Where location not in ('World', 'European Union', 'International', 'Lower middle income', 'Low income', 'High income', 'Upper middle income')
+Group by location, population
+Order by percent_population_infected desc
+
+Select continent, location, date, population, new_vaccinations, SUM(CAST(new_vaccinations as int)) OVER (PARTITION BY location ORDER BY location, date) as accum_vaccinations
+FROM `portfolioproject-360018.Covid.CovidVaccinations` 
+Where continent is not null
+Order by 2, 3
+
+With PopVsVac 
+as 
+(
+Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations, SUM(CAST(vac.new_vaccinations as int)) OVER (PARTITION BY dea.location ORDER BY dea.location, dea.date) as accum_vaccinations
+FROM `portfolioproject-360018.Covid.CovidDeaths` dea
+JOIN `portfolioproject-360018.Covid.CovidVaccinations` vac
+  on dea.location = vac.location 
+  and dea.date = vac.date 
+Where dea.continent is not null
+) 
+Select *, (accum_vaccinations/Population)*100 as vaccinated_percentage_country_population
+From PopVsVac
+
+
+-- 6. Query for Tableau Project
+--Total Death Vaccination Count Per Continent 
+-- Take these out as they are not included in the above queries and want to stay consistent
+-- European Union is part of Europe
+-- Income counted twice, put under location column
+Select location, population, SUM(total_vaccinations) as vaccination_count, 
+  (
+    SELECT 
+      SUM((total_vaccinations)/population) OVER (PARTITION BY location ORDER BY location, population)) as vaccination_percentage 
+    FROM `portfolioproject-360018.Covid.CovidVaccinations` 
+  )
+FROM `portfolioproject-360018.Covid.CovidVaccinations` 
+Where continent is null 
+and location not in ('World', 'European Union', 'International', 'Lower middle income', 'Low income', 'High income', 'Upper middle income')
+Group by location, population
+Order by vaccination_count desc
+
 
 --All countries
 Select Location, Population, date, MAX(total_cases) as highest_infection_count,  Max((total_cases/population))*100 as percent_population_infected
@@ -193,5 +240,9 @@ JOIN `portfolioproject-360018.Covid.CovidVaccinations` vac
       AND dea.date = vac.date
 WHERE dea.continent IS NOT NULL 
 
-
+--Queries and Visualizations for later:
+--A. percent of global populationtion 1. recieved one dose, 2. fully vaccinated, 3. additional dose
+--stacked horizontal bar chart
+--B. Share of population  1. recieved one dose, 2. fully vaccinated, 3. additional dose
+--Global map, color=percent of dose
 
