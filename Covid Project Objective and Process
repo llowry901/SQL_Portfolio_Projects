@@ -1,0 +1,43 @@
+For images, visit: https://docs.google.com/document/d/1qS4XyZbINHHjTO-8ddWGxIAUyq7sofUIVG4nHRyQ-gQ/edit?usp=sharing
+
+COVID-19 Data Exploration
+Skills used: Joins, CTE's, Temp Tables, Aggregate Functions, Creating Temporary Tables, Creating Views, Converting Data Types
+
+Objective
+The ultimate objective of this project was to create an interactive dashboard of global COVID19 data using Tableau. The data processing and analyzing queries were implemented through SQL (Big Query).
+Here is the link to the Tableau dashboard, made by the following SQL queries.
+
+SQL Process
+First, the data was downloaded on August 20, 2022 from the website: ourworldindata.org/covid-deaths. The dataset began January 2020 and ran until present day. This dataset contains reports of COVID cases, deaths, and vaccinations, hospital admissions, boosters, health factors, age groups, income levels, and more.
+Second, I split the data set into two separate Excel Sheets: one for data pertaining to Covid deaths, and another for vaccinations. This allowed me to query join statements in SQL to combine the set datasets together. 
+Third, I processed and cleaned the data by:
+Replacing nulls with 0 before uploading to SQL as to avoid errors
+Adding “Population” to both Covid Deaths and Covid Vaccinations dataset as to have a primary key and more easily run queries
+Making a note that the “location” column was problematic. It contained countries, continents, and income levels, which would have thrown off the results if I did not make a note to filter out when running queries
+Fourth, I explored and analyzed the data. Below are the main SQL queries I ran to analyze the data and later use to create visualizations:
+SQL QUERY
+First: this query calculates the global death percentage, ordered by continent, by calculating the sum of new cases and multiplying by 100 to result percentage. Not necessary to filter out location terms such as “world,” “international,” or including income.
+TABLEAU VISUALIZATION
+
+
+SQL QUERY
+The second query returns the total sum of each continent’s death count (filtering out location terms which were not continents).
+TABLEAU VISUALIZATION
+
+	
+SQL QUERY
+The third query calculated the percentage of a country’s population that had been infected. To find the most recent case count, the max of the total cases was used to find the highest infection rate per country. This column found the percentage by summing up each case and dividing it by population. 
+
+TABLEAU VISUALIZATION
+
+
+SQL QUERY
+The fourth query found the infection rate and percentage of population infected by country since the beginning of COVID 19 data reporting. To simplify the visual (all countries on the line graph complicated matters), I filtered the location of the query to include only highly populated countries: United States, United Kingdom, China, Russia, Canada, Mexico, and India.
+TABLEAU VISUALIZATION 
+SQL QUERY 
+The fifth query required a join with the both the Covid Deaths and Covid Vaccination dataset to calculate the countries with the highest vaccination rate compared to population. The original data set includes a column named new_vaccinations that provides the number of vaccines given by day, by country. The query performed a sum function to add together the vaccinations each day. Then, a partition call was required to separate each count by country. 
+The same results were achieved using the query below, but I wanted to show off my JOIN skills above. 
+
+TABLEAU VISUALIZATION
+
+
