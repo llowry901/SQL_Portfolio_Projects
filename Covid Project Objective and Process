@@ -5,7 +5,7 @@ Skills used: Joins, CTE's, Temp Tables, Aggregate Functions, Creating Temporary 
 
 Objective
 The ultimate objective of this project was to create an interactive dashboard of global COVID19 data using Tableau. The data processing and analyzing queries were implemented through SQL (Big Query).
-Here is the link to the Tableau dashboard, made by the following SQL queries.
+Here is the link to the Tableau dashboard, made by the following SQL queries: https://public.tableau.com/views/Covid19PortfolioProject_16612124018190/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link
 
 SQL Process
 First, the data was downloaded on August 20, 2022 from the website: ourworldindata.org/covid-deaths. The dataset began January 2020 and ran until present day. This dataset contains reports of COVID cases, deaths, and vaccinations, hospital admissions, boosters, health factors, age groups, income levels, and more.
